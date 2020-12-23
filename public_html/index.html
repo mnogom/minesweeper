@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Minesweeper</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Space+Mono">
+<!-- 		<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"> -->
+		<link rel="stylesheet" href="css/stylesheets_2.css">
+	</head>
+	<body oncontextmenu="return false;">
+<!-- 		<script src="https://unpkg.com/vue"></script> -->
+<!-- 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+		<script src="js/vue.min.js"></script>
+		<script src="js/axios.min.js"></script>
+
+		<div id="app-2">
+			
+			<div v-if="!(game_start)" class="on-table">
+				W:
+				<input type="text" v-on:input="change_size($event)" v-bind:value="width" id="W" class="input-parameters">
+				H:
+				<input type="text" v-on:input="change_size($event)" v-bind:value="height" id="H" class="input-parameters">
+				M:
+				<input type="text" v-on:input="change_size($event)" v-bind:value="mines" id="M" class="input-parameters">
+				
+				<table align="center">
+					<tr v-for="i in (1,height)">
+						<td class="cell noselect" v-for="j in (1,width)">
+							<div name="name-cell" v-on:click="init_game($event)" v-bind:id="'0,' + i + ',' + j" class="play-cell-closed" @contextmenu="put_mine($event)">e</div>
+						</td>
+					</tr>
+				</table>
+				
+			</div>
+			
+			<div v-else class="on-table">
+				sec.
+				<button class="restart-button" v-on:click="restart()">restart</button>
+				{{ mines - flag_count }}
+				
+				<table align="center">
+					<tr v-for="i in (1,height)">
+				        <td class="cell noselect" v-for="j in (1,width)">
+							<div name="name-cell" class="play-cell-closed" v-bind:id="'1,' + i + ',' + j" v-on:click="open_cell($event)" @contextmenu="put_mine($event)">e</div>
+				        </td>
+					</tr>
+				</table>
+				
+			</div>
+			
+			<div v-if="s == -1" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); color: white; text-align: center; line-height: 2500%;">
+				YOU LOSE!
+				<button v-on:click="restart(); s = 0">restart</button> <!-- check this out [0] -->
+			</div>
+			
+		</div>
+		
+		<script src="js/scripts.js"></script>
+	</body>
+</html>
