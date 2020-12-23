@@ -28,15 +28,6 @@ def get_mine_field():
                        'size': [the_game.field_height, the_game.field_width],
                        })
 
-    # --- pretty answer
-    # field_string = ''
-    #
-    # for row in the_game.field:
-    #     field_string = field_string + ' '.join(row) + '<br>'
-    #
-    # return field_string
-    # ---
-
 
 if __name__ == '__main__':
     app.run()
