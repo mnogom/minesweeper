@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import Level from "./utils/levels/level.js";
 import { getAllLevels } from "./utils/levels/defaultLevels.js";
 
 export default {
