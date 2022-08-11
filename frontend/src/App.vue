@@ -20,11 +20,11 @@ import Footer from "./components/Footer.vue";
           :level="level"
           @return="applySettings($event); closeSettings()"
         />
-        <Field />
+        <Field
+          :level="level"
+        />
       </div>
     </div>
-
-    {{ level }}
 
     <Footer />
   </div>
