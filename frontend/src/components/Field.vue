@@ -3,7 +3,7 @@
 
 <script>
 export default {
-  name: "MinesweeperField",
+  name: "Field",
   components: {},
   data() {
     return {};
