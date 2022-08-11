@@ -17,10 +17,7 @@ import Footer from "./components/Footer.vue";
       <div class="container">
         <Settings
           v-if="settingsVisible"
-          :level-name="level.getName()"
-          :width="level.getWidth()"
-          :height="level.getHeight()"
-          :mines="level.getMines()"
+          :level="level"
           @return="applySettings($event); closeSettings()"
         />
         <Field />

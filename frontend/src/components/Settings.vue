@@ -12,13 +12,13 @@
           class="form-select mb-3"
           id="difficulty-input"
           aria-label="Difficulty chooser"
-          @change="currentLevel = setName($event.target.value)"
+          @change="updatedLevel = setName($event.target.value)"
         >
           <option
             v-for="(defaultLevelName, index) in levels"
             :key="index"
             :value="defaultLevelName"
-            :selected="defaultLevelName === currentLevel.getName()"
+            :selected="defaultLevelName === updatedLevel.getName()"
           >
             {{ defaultLevelName }}
           </option>
@@ -32,9 +32,9 @@
                 type="number"
                 class="form-control"
                 id="width-input"
-                :value="currentLevel.getWidth()"
-                :disabled="currentLevel.isStandartType()"
-                @input="currentLevel = setWidth($event.target.value)"
+                :value="updatedLevel.getWidth()"
+                :disabled="updatedLevel.isStandartType()"
+                @input="updatedLevel = setWidth($event.target.value)"
               />
               <label for="width-input">Width</label>
             </div>
@@ -45,9 +45,9 @@
                 type="number"
                 class="form-control"
                 id="height-input"
-                :value="currentLevel.getHeight()"
-                :disabled="currentLevel.isStandartType()"
-                @input="currentLevel = setHeight($event.target.value)"
+                :value="updatedLevel.getHeight()"
+                :disabled="updatedLevel.isStandartType()"
+                @input="updatedLevel = setHeight($event.target.value)"
               />
               <label for="height-input">Height</label>
             </div>
@@ -58,9 +58,9 @@
                 type="number"
                 class="form-control"
                 id="count-input"
-                :value="currentLevel.getMines()"
-                :disabled="currentLevel.isStandartType()"
-                @input="currentLevel = setMines($event.target.value)"
+                :value="updatedLevel.getMines()"
+                :disabled="updatedLevel.isStandartType()"
+                @input="updatedLevel = setMines($event.target.value)"
               />
               <label for="count-input">Mines</label>
             </div>
@@ -69,10 +69,10 @@
 
         <div class="text-end">
           <div class="btn-group" role="group" aria-label="Controls">
-            <button class="btn btn btn-outline-secondary" @click="$emit('return', currentLevel)">
+            <button class="btn btn btn-outline-secondary" @click="$emit('return', updatedLevel)">
               Apply
             </button>
-            <button class="btn btn btn-outline-secondary" @click="$emit('return', initLevelFromProps())">
+            <button class="btn btn btn-outline-secondary" @click="$emit('return', level)">
               Close
             </button>
           </div>
@@ -90,10 +90,7 @@ export default {
   name: "Settings",
   
   props: {
-    levelName: { type: String, required: true },
-    width: { type: Number, default: null },
-    height: { type: Number, default: null },
-    mines: { type: Number, default: null },
+    level: { required: true },
   },
 
   emits: [
@@ -103,30 +100,27 @@ export default {
   data() {
     return {
       levels: getAllLevels(),
-      currentLevel: null,
+      updatedLevel: null,
     };
   },
 
   created() {
-    this.currentLevel = this.initLevelFromProps();
+    this.updatedLevel = this.level;
   },
 
   methods: {
     setName(levelName) {
-      return this.currentLevel.setName(levelName);
+      return this.updatedLevel.setName(levelName);
     },
     setWidth(width) {
-      return this.currentLevel.setWidth(width);
+      return this.updatedLevel.setWidth(width);
     },
     setHeight(height) {
-      return this.currentLevel.seteight(height);
+      return this.updatedLevel.seteight(height);
     },
     setMines(mines) {
-      return this.currentLevel.setMines(mines);
+      return this.updatedLevel.setMines(mines);
     },
-    initLevelFromProps() {
-      return new Level(this.levelName, this.width, this.height, this.mines)
-    }
   },
 };
 </script>
