@@ -10,12 +10,13 @@
         <!-- Difficulty selector -->
         <select
           class="form-select mb-3"
+          :class="{ 'is-invalid': !(isValidName) }"
           id="difficulty-input"
           aria-label="Difficulty chooser"
-          @change="updatedLevel = setName($event.target.value)"
+          @change="setName($event.target.value)"
         >
           <option
-            v-for="(defaultLevelName, index) in levels"
+            v-for="(defaultLevelName, index) in levelNames"
             :key="index"
             :value="defaultLevelName"
             :selected="defaultLevelName === updatedLevel.getName()"
@@ -31,10 +32,11 @@
               <input
                 type="number"
                 class="form-control"
+                :class="{ 'is-invalid': !(isValidWidth) }"
                 id="width-input"
                 :value="updatedLevel.getWidth()"
                 :disabled="updatedLevel.isStandartType()"
-                @input="updatedLevel = setWidth($event.target.value)"
+                @input="setWidth(Number($event.target.value))"
               />
               <label for="width-input">Width</label>
             </div>
@@ -44,10 +46,11 @@
               <input
                 type="number"
                 class="form-control"
+                :class="{ 'is-invalid': !(isValidHeight) }"
                 id="height-input"
                 :value="updatedLevel.getHeight()"
                 :disabled="updatedLevel.isStandartType()"
-                @input="updatedLevel = setHeight($event.target.value)"
+                @input="setHeight(Number($event.target.value))"
               />
               <label for="height-input">Height</label>
             </div>
@@ -57,10 +60,11 @@
               <input
                 type="number"
                 class="form-control"
+                :class="{ 'is-invalid': !(isValidMines) }"
                 id="count-input"
                 :value="updatedLevel.getMines()"
                 :disabled="updatedLevel.isStandartType()"
-                @input="updatedLevel = setMines($event.target.value)"
+                @input="setMines(Number($event.target.value))"
               />
               <label for="count-input">Mines</label>
             </div>
@@ -69,10 +73,14 @@
 
         <div class="text-end">
           <div class="btn-group" role="group" aria-label="Controls">
-            <button class="btn btn btn-outline-secondary" @click="$emit('return', updatedLevel)">
+            <button
+              class="btn btn btn-outline-secondary"
+              :disabled="!(isValidSettings())"
+              @click="$emit('return', getUpdatedLevel())"
+            >
               Apply
             </button>
-            <button class="btn btn btn-outline-secondary" @click="$emit('return', level)">
+            <button class="btn btn btn-outline-secondary" @click="$emit('return', initialLevel)">
               Close
             </button>
           </div>
@@ -83,13 +91,17 @@
 </template>
 
 <script>
-import { getAllLevels } from "./utils/levels/defaultLevels.js";
+import Level from "./utils/levels/level.js";
+import { getDefaultNames } from "./utils/levels/default-levels.js";
+import {
+  validateWidth, validateHeight, validateMines, validateName
+} from "./utils/levels/validators.js";
 
 export default {
   name: "Settings",
   
   props: {
-    level: { required: true },
+    initialLevel: { required: true },
   },
 
   emits: [
@@ -98,28 +110,73 @@ export default {
 
   data() {
     return {
-      levels: getAllLevels(),
+      levelNames: getDefaultNames(),
       updatedLevel: null,
+      isValidWidth: true,
+      isValidHeight: true,
+      isValidMines: true,
+      isValidName: true,
     };
   },
 
   created() {
-    this.updatedLevel = this.level;
+    this.updatedLevel = this.initialLevel;
   },
 
   methods: {
     setName(levelName) {
-      return this.updatedLevel.setName(levelName);
+      validateName(levelName)
+        .then((isValid) => {
+          this.isValidName = isValid;
+          this.updatedLevel = this.updatedLevel.setName(levelName);
+        })
     },
+    
     setWidth(width) {
-      return this.updatedLevel.setWidth(width);
+      validateWidth(width)
+        .then((isValid) => {
+          this.isValidWidth = isValid;
+          this.updatedLevel = this.updatedLevel.setWidth(width);
+        });
     },
+    
     setHeight(height) {
-      return this.updatedLevel.seteight(height);
+      validateHeight(height)
+        .then((isValid) => {
+          this.isValidHeight = isValid;
+          this.updatedLevel = this.updatedLevel.setHeight(height);
+        });
     },
+    
     setMines(mines) {
-      return this.updatedLevel.setMines(mines);
+      const width = this.updatedLevel.getWidth();
+      const height = this.updatedLevel.getHeight();
+      validateMines(width, height, mines)
+        .then((isValid) => {
+          this.isValidMines = isValid;
+          this.updatedLevel = this.updatedLevel.setMines(mines);
+        })
     },
+    
+    isValidSettings() {
+      return this.isValidName && this.isValidWidth && this.isValidHeight && this.isValidMines
+    },
+    
+    getUpdatedLevel() {
+      const level = this.isValidSettings() ? this.updatedLevel : this.initialLevel;
+      if (level.isStandartType()) {
+        return level;
+      }
+      for (const levelName of this.levelNames) {
+        if (levelName !== level.getName()) {
+          const defaultLevel = new Level(levelName)
+          if (level.isEqual(defaultLevel)) {
+            return defaultLevel;
+          }
+        }
+        return level;
+      }
+    }
   },
 };
 </script>

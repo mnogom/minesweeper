@@ -17,7 +17,7 @@ import Footer from "./components/Footer.vue";
       <div class="container">
         <Settings
           v-if="settingsVisible"
-          :level="level"
+          :initial-level="level"
           @return="applySettings($event); closeSettings()"
         />
         <Field

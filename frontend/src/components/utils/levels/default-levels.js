@@ -5,7 +5,7 @@ const levelsMap = {
   Architect: { width: null, height: null, mines: null },
 };
 
-function getAllLevels() {
+function getDefaultNames() {
   return Object.keys(levelsMap);
 };
 
@@ -22,7 +22,7 @@ function getDefaultMines(level) {
 };
 
 export {
-  getAllLevels,
+  getDefaultNames,
   getDefaultWidth,
   getDefaultHeight,
   getDefaultMines,

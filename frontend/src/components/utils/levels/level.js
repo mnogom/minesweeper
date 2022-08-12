@@ -1,4 +1,4 @@
-import { getDefaultWidth, getDefaultHeight, getDefaultMines } from "./defaultLevels";
+import { getDefaultWidth, getDefaultHeight, getDefaultMines } from "./default-levels";
 
 function getName() {
   return this._name;
@@ -52,6 +52,13 @@ function setMines(mines) {
   );
 };
 
+function isEqual(level) {
+  const isEqualWidth = this.getWidth() === level.getWidth();
+  const isEqualHeight = this.getHeight() === level.getHeight();
+  const isEqualMines = this.getMines() === level.getMines();
+  return isEqualWidth && isEqualHeight && isEqualMines;
+}
+
 function isStandartType() {
   return this.getName() !== "Architect";
 };
@@ -79,6 +86,7 @@ function Name(name, width = null, height = null, mines = null) {
   this.getMines = getMines;
   this.setMines = setMines;
   this.isStandartType = isStandartType;
+  this.isEqual = isEqual;
 };
 
 export default Name
