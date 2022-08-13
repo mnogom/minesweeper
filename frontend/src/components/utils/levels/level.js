@@ -1,56 +1,45 @@
-import { getDefaultWidth, getDefaultHeight, getDefaultMines } from "./default-levels.js";
+import {
+  getDefaultWidth,
+  getDefaultHeight,
+  getDefaultMines,
+} from "./default-levels.js";
 
 function getName() {
   return this._name;
-};
+}
 
 function setName(name, width = null, height = null, mines = null) {
   return new Name(
     name,
     width ? width : this.getWidth(),
     height ? height : this.getHeight(),
-    mines ? mines : this.getMines(),
+    mines ? mines : this.getMines()
   );
-};
+}
 
 function getWidth() {
   return this._width;
-};
+}
 
 function setWidth(width) {
-  return new Name(
-    this.getName(),
-    width,
-    this.getHeight(),
-    this.getMines(),
-  );
-};
+  return new Name(this.getName(), width, this.getHeight(), this.getMines());
+}
 
 function getHeight() {
   return this._height;
-};
+}
 
 function setHeight(height) {
-  return new Name(
-    this.getName(),
-    this.getWidth(),
-    height,
-    this.getMines(),
-  );
-};
+  return new Name(this.getName(), this.getWidth(), height, this.getMines());
+}
 
 function getMines() {
   return this._mines;
-};
+}
 
 function setMines(mines) {
-  return new Name(
-    this.getName(),
-    this.getWidth(),
-    this.getHeight(),
-    mines,
-  );
-};
+  return new Name(this.getName(), this.getWidth(), this.getHeight(), mines);
+}
 
 function isEqual(level) {
   const isEqualWidth = this.getWidth() === level.getWidth();
@@ -61,7 +50,7 @@ function isEqual(level) {
 
 function isStandartType() {
   return this.getName() !== "Architect";
-};
+}
 
 function Name(name, width = null, height = null, mines = null) {
   const _name = name;
@@ -87,6 +76,6 @@ function Name(name, width = null, height = null, mines = null) {
   this.setMines = setMines;
   this.isStandartType = isStandartType;
   this.isEqual = isEqual;
-};
+}
 
-export default Name
+export default Name;

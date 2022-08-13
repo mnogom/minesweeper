@@ -28,7 +28,11 @@
               Game
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" @click="Document.alert()">Settings</a></li>
+              <li>
+                <a class="dropdown-item" href="#" @click="Document.alert()">
+                  Settings
+                </a>
+              </li>
               <li><a class="dropdown-item" href="#">GitHub</a></li>
             </ul>
           </li>
@@ -41,7 +45,6 @@
 <script>
 export default {
   name: "NavbarMain",
-  
 };
 </script>
 

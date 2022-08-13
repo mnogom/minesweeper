@@ -9,20 +9,19 @@ import Footer from "./components/Footer.vue";
   <div class="d-flex flex-column min-vh-100">
     <Navbar />
 
-    <button class="btn btn-primary" @click="openSettings()">
-      Settings
-    </button>
+    <button class="btn btn-primary" @click="openSettings()">Settings</button>
 
     <div class="flex-grow-1">
       <div class="container">
         <Settings
           v-if="settingsVisible"
           :initial-level="level"
-          @return="applySettings($event); closeSettings()"
+          @return="
+            applySettings($event);
+            closeSettings();
+          "
         />
-        <Field
-          :level="level"
-        />
+        <Field :level="level" />
       </div>
     </div>
 
@@ -31,14 +30,14 @@ import Footer from "./components/Footer.vue";
 </template>
 
 <script>
-import Level from "./components/utils/levels/level.js"
+import Level from "./components/utils/levels/level.js";
 
 export default {
   data() {
     return {
       settingsVisible: false,
-      level: new Level('Junior'),
-    }
+      level: new Level("Junior"),
+    };
   },
   methods: {
     openSettings() {
@@ -49,9 +48,9 @@ export default {
     },
     closeSettings() {
       this.settingsVisible = false;
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped></style>

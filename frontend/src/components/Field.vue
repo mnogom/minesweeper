@@ -3,15 +3,13 @@ import Cell from "./Cell.vue";
 </script>
 
 <template>
-<main class="mt-5">
-  <div class="row row-cols-auto" v-for="i in level.getHeight()" :key="i">
-    <div class="coll p-0" v-for="j in level.getWidth()" :key="j">
-      <Cell :address="1"
-            :value="j"
-            :isOpen="false"/>
+  <main class="mt-5">
+    <div class="row row-cols-auto" v-for="i in level.getHeight()" :key="i">
+      <div class="coll p-0" v-for="j in level.getWidth()" :key="j">
+        <Cell :address="1" :value="j" :isOpen="false" />
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 </template>
 
 <script>

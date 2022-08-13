@@ -3,25 +3,24 @@
 </template>
 
 <script>
-  export default {
-    name: "Cell",
-    props: {
-      address: {
-        required: true,
-        type: Number,
-      },
-      value: {
-        required: true,
-        type: Number,
-      },
-      isOpen: {
-        required: true,
-        type: Boolean,
-      },
+export default {
+  name: "Cell",
+  props: {
+    address: {
+      required: true,
+      type: Number,
     },
-  }
+    value: {
+      required: true,
+      type: Number,
+    },
+    isOpen: {
+      required: true,
+      type: Boolean,
+    },
+  },
+};
 </script>
-
 
 <style scoped>
 .cell {
@@ -36,6 +35,6 @@
   text-align: center;
 }
 .cell:active {
-	outline: 0px;
+  outline: 0px;
 }
 </style>

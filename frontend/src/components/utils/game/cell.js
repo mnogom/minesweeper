@@ -1,4 +1,4 @@
-import { mineValue } from "./constants.js"
+import { mineValue } from "./constants.js";
 
 function getAddress() {
   return this._address;
@@ -6,11 +6,11 @@ function getAddress() {
 
 function getValue() {
   return this._value;
-};
+}
 
 function isMine() {
   return this.getValue() === mineValue;
-};
+}
 
 function isOpened() {
   return this._opened;
@@ -18,47 +18,27 @@ function isOpened() {
 
 function isFlagged() {
   return this._flagged;
-};
+}
 
 function isEqual(cell) {
   return this.getAddress() === cell.getAddress();
-};
+}
 
 function setValue(value) {
-  return new Cell(
-    this.getAddress(),
-    value,
-    this.isOpened(),
-    this.isFlagged(),
-  );
-};
+  return new Cell(this.getAddress(), value, this.isOpened(), this.isFlagged());
+}
 
 function open() {
-  return new Cell(
-    this.getAddress(),
-    this.getValue(),
-    true,
-    this.isFlagged(),
-  )
-};
+  return new Cell(this.getAddress(), this.getValue(), true, this.isFlagged());
+}
 
 function placeFlag() {
-  return new Cell(
-    this.getAddress(),
-    this.getValue(),
-    this.isOpened(),
-    true,
-  );
-};
+  return new Cell(this.getAddress(), this.getValue(), this.isOpened(), true);
+}
 
 function removeFlag() {
-  return new Cell(
-    this.getAddress(),
-    this.getValue(),
-    this.isOpened(),
-    false,
-  );
-};
+  return new Cell(this.getAddress(), this.getValue(), this.isOpened(), false);
+}
 
 function Cell(address, value = null, opened = false, flagged = false) {
   this._address = address;
