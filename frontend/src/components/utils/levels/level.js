@@ -1,4 +1,4 @@
-import { getDefaultWidth, getDefaultHeight, getDefaultMines } from "./default-levels";
+import { getDefaultWidth, getDefaultHeight, getDefaultMines } from "./default-levels.js";
 
 function getName() {
   return this._name;

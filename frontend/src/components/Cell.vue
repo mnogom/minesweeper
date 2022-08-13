@@ -6,6 +6,10 @@
   export default {
     name: "Cell",
     props: {
+      address: {
+        required: true,
+        type: Number,
+      },
       value: {
         required: true,
         type: Number,

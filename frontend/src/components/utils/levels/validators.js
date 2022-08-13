@@ -13,7 +13,7 @@ function validateHeight(height) {
 };
 
 function validateMines(width, height, mines) {
-  const schema = yup.number().integer().moreThan(0).lessThan(width * height - 1);
+  const schema = yup.number().integer().moreThan(0).lessThan(width * height - 9);
   return schema.isValid(mines);
 };
 
