@@ -21,7 +21,7 @@ import Footer from "./components/Footer.vue";
             closeSettings();
           "
         />
-        <Field :level="level" />
+        <Field v-if="!settingsVisible" :level="level" />
       </div>
     </div>
 

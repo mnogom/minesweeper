@@ -4,26 +4,50 @@ import Cell from "./Cell.vue";
 
 <template>
   <main class="mt-5">
-    <div class="row row-cols-auto" v-for="i in level.getHeight()" :key="i">
-      <div class="coll p-0" v-for="j in level.getWidth()" :key="j">
-        <Cell :address="1" :value="j" :isOpen="false" />
+    <div class="row row-cols-auto" v-for="i in field.getLevel().getHeight()" :key="i">
+      <div class="coll p-0" v-for="j in field.getLevel().getWidth()" :key="j">
+        <Cell
+          :cell="field.getCellByAddress((j - 1) + (i - 1) * field.getLevel().getWidth())"
+          @touch="field = openCell($event)"
+          @toggle-flag="field = field.toggleFlag($event)"
+        />
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import Field from "./utils/game/field";
+
 export default {
   name: "Field",
 
   data() {
-    return {};
+    return {
+      field: Object,
+      gemeStatus: "not started",
+    };
   },
 
   props: {
     level: { required: true },
   },
 
-  methods: {},
+  created() {
+    this.field = this.getNewField(this.level);
+  },
+
+  methods: {
+    getNewField(level) {
+      return new Field(level);
+    },
+    openCell(cell) {
+      if (cell.isMine()) {
+        this.gameStatus = "loose";
+        return this.field.showMines();
+      }
+      return this.field.touch(cell);
+    },
+  },
 };
 </script>

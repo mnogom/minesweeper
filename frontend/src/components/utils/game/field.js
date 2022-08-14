@@ -45,11 +45,11 @@ function getLevel() {
   return this._level;
 }
 
-function getX(cell) {
+function getCellX(cell) {
   return Math.floor(cell.getAddress() / this.getLevel().getWidth());
 }
 
-function getY(cell) {
+function getCellY(cell) {
   return cell.getAddress() % this.getLevel().getWidth();
 }
 
@@ -71,10 +71,10 @@ function areNeighbors(cell1, cell2) {
   if (cell1.isEqual(cell2)) {
     return false;
   }
-  const x1 = this.getX(cell1);
-  const y1 = this.getY(cell1);
-  const x2 = this.getX(cell2);
-  const y2 = this.getY(cell2);
+  const x1 = this.getCellX(cell1);
+  const y1 = this.getCellY(cell1);
+  const x2 = this.getCellX(cell2);
+  const y2 = this.getCellY(cell2);
   return Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1;
 }
 
@@ -228,12 +228,18 @@ function toggleFlag(cellToFlag) {
   return this.setCells(cells);
 }
 
+function showMines() {
+  const cells = this.getCells()
+    .map((cell) => cell.isMine() ? cell.open() : cell);
+  return this.setCells(cells)
+}
+
 function Field(level, cells) {
   this._level = level;
   this._cells = cells ? cells : makeEmptyCells(level);
   this.getLevel = getLevel;
-  this.getX = getX;
-  this.getY = getY;
+  this.getCellX = getCellX;
+  this.getCellY = getCellY;
   this.areNeighbors = areNeighbors;
   this.getNeighbors = getNeighbors;
   this.getCellByAddress = getCellByAddress;
@@ -242,12 +248,8 @@ function Field(level, cells) {
   this.isEmpty = isEmpty;
   this.touch = touch;
   this.toggleFlag = toggleFlag;
+  this.showMines = showMines;
   this.toString = toString;
 }
 
-import Level from "../levels/level.js";
-const level = new Level("_test");
-
-let field = new Field(level);
-field = field.touch(new Cell(6));
-console.log(String(field));
+export default Field;
