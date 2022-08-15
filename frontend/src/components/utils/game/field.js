@@ -8,29 +8,39 @@ function toString() {
   const cells = this.getCells();
   const width = this.getLevel().getWidth();
   const rows = _.chunk(cells, width);
-  return rows.map((row) => (
-    [
-      row.map((cell) => {
-        const address = String(cell.getAddress());
-        return address.length === 1 ? ` ${address}` : address;
-      }).join(" "),
-      row.map((cell) => cell.getValue() === mineValue ? "*" : cell.getValue()).join(" "),
-      row.map((cell) => {
-        if (cell.isOpened()) {
-          switch (cell.getValue()) {
-            case 0:
-              return 0;
-            case mineValue:
-              return "*";
-            default:
-              return cell.getValue();
-          }
-        }
-        if (cell.isFlagged()) return "F";
-        return "█"
-      }).join(" "),
-    ].join("   |   ")
-  )).join("\n")
+  return rows
+    .map((row) =>
+      [
+        row
+          .map((cell) => {
+            const address = String(cell.getAddress());
+            return address.length === 1 ? ` ${address}` : address;
+          })
+          .join(" "),
+        row
+          .map((cell) =>
+            cell.getValue() === mineValue ? "*" : cell.getValue()
+          )
+          .join(" "),
+        row
+          .map((cell) => {
+            if (cell.isOpened()) {
+              switch (cell.getValue()) {
+                case 0:
+                  return 0;
+                case mineValue:
+                  return "*";
+                default:
+                  return cell.getValue();
+              }
+            }
+            if (cell.isFlagged()) return "F";
+            return "█";
+          })
+          .join(" "),
+      ].join("   |   ")
+    )
+    .join("\n");
 }
 
 function getLevel() {
@@ -108,7 +118,7 @@ function touch(cell) {
     }
     return _advanceTouch.call(this, cell);
   }
-  return this
+  return this;
 }
 
 function _firstTouch(initCell) {
@@ -156,7 +166,7 @@ function _casualTouch(cellToOpen) {
 
   if (cellToOpen.isMine() && not(cellToOpen.isFlagged())) {
     // Loose condition
-    return showMines.call(this)
+    return showMines.call(this);
   }
 
   while (cellsToOpen.length > 0) {
@@ -225,9 +235,10 @@ function toggleFlag(cellToFlag) {
 }
 
 function showMines() {
-  const cells = this.getCells()
-    .map((cell) => cell.isMine() ? cell.open() : cell);
-  return this.setCells(cells)
+  const cells = this.getCells().map((cell) =>
+    cell.isMine() ? cell.open() : cell
+  );
+  return this.setCells(cells);
 }
 
 function isFieldEmpty() {
@@ -237,15 +248,22 @@ function isFieldEmpty() {
 }
 
 function areMinesOpened() {
-  return this.getCells().filter((cell) => cell.isMine() && cell.isOpened()).length !== 0
+  return (
+    this.getCells().filter((cell) => cell.isMine() && cell.isOpened())
+      .length !== 0
+  );
 }
 
 function areAllCellsAreOpened() {
-  const level = this.getLevel()
+  const level = this.getLevel();
   const width = level.getWidth();
   const height = level.getHeight();
   const mines = level.getMines();
-  return this.getCells().filter((cell) => not(cell.isMine()) && cell.isOpened()).length === width * height - mines;
+  return (
+    this.getCells().filter((cell) => not(cell.isMine()) && cell.isOpened())
+      .length ===
+    width * height - mines
+  );
 }
 
 function getStatus() {
@@ -278,30 +296,3 @@ function Field(level, cells) {
 }
 
 export default Field;
-
-
-import Level from "../levels/level.js";
-
-const lvl = new Level("_test");
-let field = new Field(lvl);
-
-console.log(field.getStatus());
-const values = [0, 1, 1, 1, 1, 1, 1, 0, 2, -1, 3, 2, -1, 1, 0, 2, -1, -1, 2, 1, 1, 0, 2, 3, 3, 2, 1, 1, 0, 1, -1, 1, 1, -1, 1];
-field = field.setCells(
-  field.getCells().map((cell, i) => cell.setValue(values[i]))
-);
-
-const testTouch = (field, address) => {
-  const touchedCell = field.getCellByAddress(address);
-  const _field = field.touch(touchedCell);
-  console.log(`Status: ${_field.getStatus()} // Touched ${address}`);
-  console.log(String(_field));
-  console.log('-'.repeat(20));
-  return _field;
-};
-
-field = testTouch(field, 0);
-field = field.toggleFlag(field.getCellByAddress(33));
-field = testTouch(field, 34);
-field = testTouch(field, 34);
-

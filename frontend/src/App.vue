@@ -11,10 +11,13 @@ import Footer from "./components/Footer.vue";
 
     <div class="flex-grow-1">
       <div class="container">
-        
         <div class="btn-group">
-          <button class="btn btn-outline-primary mt-3" @click="openSettings()">Settings</button>
-          <button class="btn btn-outline-primary mt-3" @click="restartGame()">Restart</button>
+          <button class="btn btn-outline-primary mt-3" @click="openSettings()">
+            Settings
+          </button>
+          <button class="btn btn-outline-primary mt-3" @click="restartGame()">
+            Restart
+          </button>
         </div>
 
         <Settings

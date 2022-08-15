@@ -2,9 +2,9 @@
   <div
     class="cell user-select-none"
     :class="{
-      'opened': cell.isOpened(),
-      'flagged': cell.isFlagged(),
-      'mine': cell.isOpened() && cell.isMine()
+      opened: cell.isOpened(),
+      flagged: cell.isFlagged(),
+      mine: cell.isOpened() && cell.isMine(),
     }"
     :value-number="cell.isOpened() ? cell.getValue() : null"
     @click="$emit('touch', cell)"
@@ -30,14 +30,14 @@ export default {
         return this.cell.getValue();
       }
       return null;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .cell {
-  font-family: 'webFont', monospace;
+  font-family: "webFont", monospace;
   width: 2rem;
   height: 2rem;
   font-size: small;
@@ -59,43 +59,43 @@ export default {
 }
 
 .opened[value-number="0"] {
-	color: rgba(0, 0, 0, 0);
+  color: rgba(0, 0, 0, 0);
 }
 
 .opened[value-number="1"] {
-	color: rgb(0, 0, 255);
+  color: rgb(0, 0, 255);
 }
 
 .opened[value-number="2"] {
-	color: rgb(0, 127, 0);
+  color: rgb(0, 127, 0);
 }
 
 .opened[value-number="3"] {
-	color: rgb(255, 0, 0);
+  color: rgb(255, 0, 0);
 }
 
 .opened[value-number="4"] {
-	color: rgb(0, 0, 127);
+  color: rgb(0, 0, 127);
 }
 
 .opened[value-number="5"] {
-	color: rgb(127, 0, 0);
+  color: rgb(127, 0, 0);
 }
 
 .opened[value-number="6"] {
-	color: rgb(0, 127, 127);
+  color: rgb(0, 127, 127);
 }
 
 .opened[value-number="7"] {
-	color: rgb(0, 0, 63);
+  color: rgb(0, 0, 63);
 }
 
 .opened[value-number="8"] {
-	color: rgb(0, 63, 0);
+  color: rgb(0, 63, 0);
 }
 
 .value-09 {
-	color: rgb(63, 0, 0);
+  color: rgb(63, 0, 0);
 }
 
 .flagged {
