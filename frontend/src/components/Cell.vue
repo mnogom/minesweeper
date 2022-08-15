@@ -17,13 +17,13 @@
 <script>
 export default {
   name: "Cell",
-  emits: ["touch", "toggle-flag"],
   props: {
     cell: {
       required: true,
       type: Object,
     },
   },
+  emits: ["touch", "toggle-flag"],
   methods: {
     renderCell() {
       if (this.cell.isOpened() && !this.cell.isMine()) {

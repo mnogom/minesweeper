@@ -8,11 +8,15 @@ import Cell from "./Cell.vue";
       <div class="coll p-0" v-for="j in field.getLevel().getWidth()" :key="j">
         <Cell
           :cell="field.getCellByAddress((j - 1) + (i - 1) * field.getLevel().getWidth())"
-          @touch="field = openCell($event)"
+          @touch="field = field.touch($event)"
           @toggle-flag="field = field.toggleFlag($event)"
         />
       </div>
     </div>
+  <div>{{ field.getStatus() }}</div>
+  <div>
+    {{ level.getMines() - field.getCells().filter((cell) => cell.isFlagged()).length  }}
+  </div>
   </main>
 </template>
 
@@ -21,16 +25,13 @@ import Field from "./utils/game/field";
 
 export default {
   name: "Field",
-
+  props: { level: { required: true } },
+  emits: ["switch-game-status"],
   data() {
     return {
       field: Object,
       gemeStatus: "not started",
     };
-  },
-
-  props: {
-    level: { required: true },
   },
 
   created() {

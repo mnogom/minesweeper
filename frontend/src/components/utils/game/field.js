@@ -2,43 +2,35 @@ import _ from "lodash";
 
 import Cell from "./cell.js";
 import { shuffle, contains, not } from "./utils.js";
-import { mineValue } from "./constants.js";
+import { mineValue, statuses } from "./constants.js";
 
 function toString() {
   const cells = this.getCells();
   const width = this.getLevel().getWidth();
   const rows = _.chunk(cells, width);
-
-  let result = `\n${"=".repeat(2 * width - 1)}\n`;
-  result = result += rows
-    .map((row) => {
-      return row
-        .map((cell) => {
-          return cell.getValue() === mineValue ? "*" : cell.getValue();
-        })
-        .join(" ");
-    })
-    .join("\n");
-
-  result = result += `\n${"=".repeat(2 * width - 1)}\n`;
-
-  result += rows
-    .map((row) => {
-      return row
-        .map((cell) => {
-          if (cell.isOpened()) {
-            return cell.getValue() === 0 ? " " : cell.getValue();
+  return rows.map((row) => (
+    [
+      row.map((cell) => {
+        const address = String(cell.getAddress());
+        return address.length === 1 ? ` ${address}` : address;
+      }).join(" "),
+      row.map((cell) => cell.getValue() === mineValue ? "*" : cell.getValue()).join(" "),
+      row.map((cell) => {
+        if (cell.isOpened()) {
+          switch (cell.getValue()) {
+            case 0:
+              return 0;
+            case mineValue:
+              return "*";
+            default:
+              return cell.getValue();
           }
-          if (cell.isFlagged()) {
-            return "F";
-          }
-          return "█";
-        })
-        .join(" ");
-    })
-    .join("\n");
-  result = result += `\n${"=".repeat(2 * width - 1)}\n`;
-  return result;
+        }
+        if (cell.isFlagged()) return "F";
+        return "█"
+      }).join(" "),
+    ].join("   |   ")
+  )).join("\n")
 }
 
 function getLevel() {
@@ -57,12 +49,6 @@ function getCells() {
   return this._cells;
 }
 
-function isEmpty() {
-  return (
-    this.getCells().filter((cell) => cell.getValue() !== null).length === 0
-  );
-}
-
 function setCells(cells) {
   return new Field(this.getLevel(), cells);
 }
@@ -71,10 +57,10 @@ function areNeighbors(cell1, cell2) {
   if (cell1.isEqual(cell2)) {
     return false;
   }
-  const x1 = this.getCellX(cell1);
-  const y1 = this.getCellY(cell1);
-  const x2 = this.getCellX(cell2);
-  const y2 = this.getCellY(cell2);
+  const x1 = getCellX.call(this, cell1);
+  const y1 = getCellY.call(this, cell1);
+  const x2 = getCellX.call(this, cell2);
+  const y2 = getCellY.call(this, cell2);
   return Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1;
 }
 
@@ -110,15 +96,19 @@ function makeEmptyCells(level) {
 }
 
 function touch(cell) {
-  if (this.isEmpty()) {
+  // statused function ------------------------
+  if (this.getStatus() === statuses.notStarted) {
     const field = _firstTouch.call(this, cell);
     const updatedCell = field.getCellByAddress(cell.getAddress());
     return _casualTouch.call(field, updatedCell);
   }
-  if (not(cell.isOpened())) {
-    return _casualTouch.call(this, cell);
+  if (this.getStatus() === statuses.started) {
+    if (not(cell.isOpened())) {
+      return _casualTouch.call(this, cell);
+    }
+    return _advanceTouch.call(this, cell);
   }
-  return _advanceTouch.call(this, cell);
+  return this
 }
 
 function _firstTouch(initCell) {
@@ -163,6 +153,11 @@ function _casualTouch(cellToOpen) {
   const openedCells = [];
   const cellsToOpen = [cellToOpen];
   let cells = this.getCells();
+
+  if (cellToOpen.isMine() && not(cellToOpen.isFlagged())) {
+    // Loose condition
+    return showMines.call(this)
+  }
 
   while (cellsToOpen.length > 0) {
     const cell = cellsToOpen.pop();
@@ -213,7 +208,8 @@ function _advanceTouch(cellToOpen) {
 }
 
 function toggleFlag(cellToFlag) {
-  if (this.isEmpty()) {
+  // statused function ------------------------
+  if (this.getStatus() !== statuses.started) {
     return this;
   }
   if (cellToFlag.isOpened()) {
@@ -234,22 +230,78 @@ function showMines() {
   return this.setCells(cells)
 }
 
+function isFieldEmpty() {
+  return (
+    this.getCells().filter((cell) => cell.getValue() !== null).length === 0
+  );
+}
+
+function areMinesOpened() {
+  return this.getCells().filter((cell) => cell.isMine() && cell.isOpened()).length !== 0
+}
+
+function areAllCellsAreOpened() {
+  const level = this.getLevel()
+  const width = level.getWidth();
+  const height = level.getHeight();
+  const mines = level.getMines();
+  return this.getCells().filter((cell) => not(cell.isMine()) && cell.isOpened()).length === width * height - mines;
+}
+
+function getStatus() {
+  if (isFieldEmpty.call(this)) {
+    return statuses.notStarted;
+  }
+  if (areMinesOpened.call(this)) {
+    return statuses.loosed;
+  }
+  if (areAllCellsAreOpened.call(this)) {
+    return statuses.winned;
+  }
+  return statuses.started;
+}
+
 function Field(level, cells) {
   this._level = level;
   this._cells = cells ? cells : makeEmptyCells(level);
   this.getLevel = getLevel;
-  this.getCellX = getCellX;
-  this.getCellY = getCellY;
   this.areNeighbors = areNeighbors;
   this.getNeighbors = getNeighbors;
   this.getCellByAddress = getCellByAddress;
   this.getCells = getCells;
   this.setCells = setCells;
-  this.isEmpty = isEmpty;
+  this.isFieldEmpty = isFieldEmpty;
+  this.getStatus = getStatus;
   this.touch = touch;
   this.toggleFlag = toggleFlag;
-  this.showMines = showMines;
   this.toString = toString;
 }
 
 export default Field;
+
+
+import Level from "../levels/level.js";
+
+const lvl = new Level("_test");
+let field = new Field(lvl);
+
+console.log(field.getStatus());
+const values = [0, 1, 1, 1, 1, 1, 1, 0, 2, -1, 3, 2, -1, 1, 0, 2, -1, -1, 2, 1, 1, 0, 2, 3, 3, 2, 1, 1, 0, 1, -1, 1, 1, -1, 1];
+field = field.setCells(
+  field.getCells().map((cell, i) => cell.setValue(values[i]))
+);
+
+const testTouch = (field, address) => {
+  const touchedCell = field.getCellByAddress(address);
+  const _field = field.touch(touchedCell);
+  console.log(`Status: ${_field.getStatus()} // Touched ${address}`);
+  console.log(String(_field));
+  console.log('-'.repeat(20));
+  return _field;
+};
+
+field = testTouch(field, 0);
+field = field.toggleFlag(field.getCellByAddress(33));
+field = testTouch(field, 34);
+field = testTouch(field, 34);
+

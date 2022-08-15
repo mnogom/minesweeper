@@ -9,10 +9,14 @@ import Footer from "./components/Footer.vue";
   <div class="d-flex flex-column min-vh-100">
     <Navbar />
 
-    <button class="btn btn-primary" @click="openSettings()">Settings</button>
-
     <div class="flex-grow-1">
       <div class="container">
+        
+        <div class="btn-group">
+          <button class="btn btn-outline-primary mt-3" @click="openSettings()">Settings</button>
+          <button class="btn btn-outline-primary mt-3" @click="restartGame()">Restart</button>
+        </div>
+
         <Settings
           v-if="settingsVisible"
           :initial-level="level"
