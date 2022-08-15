@@ -24,7 +24,7 @@ import Cell from "./Cell.vue";
     <div>{{ field.getStatus() }}</div>
     <div>
       {{
-        level.getMines() -
+        field.getLevel().getMines() -
         field.getCells().filter((cell) => cell.isFlagged()).length
       }}
     </div>
