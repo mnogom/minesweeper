@@ -21,13 +21,16 @@ import Cell from "./Cell.vue";
         />
       </div>
     </div>
-    <div>{{ field.getStatus() }}</div>
+    <div @click="field = new Field(level)">
+      status: {{ field.getStatus() }}
+    </div>
     <div>
-      {{
+      Mines estimate: {{
         field.getLevel().getMines() -
         field.getCells().filter((cell) => cell.isFlagged()).length
       }}
     </div>
+    <div>Timer: {{ time }}</div>
   </main>
 </template>
 
@@ -42,24 +45,12 @@ export default {
     return {
       field: Object,
       gemeStatus: "not started",
+      time: 0,
     };
   },
 
   created() {
-    this.field = this.getNewField(this.level);
-  },
-
-  methods: {
-    getNewField(level) {
-      return new Field(level);
-    },
-    openCell(cell) {
-      if (cell.isMine()) {
-        this.gameStatus = "loose";
-        return this.field.showMines();
-      }
-      return this.field.touch(cell);
-    },
+    this.field = new Field(this.level);
   },
 };
 </script>

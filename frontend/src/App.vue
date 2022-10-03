@@ -9,7 +9,7 @@ import Footer from "./components/Footer.vue";
   <div class="d-flex flex-column min-vh-100">
     <Navbar />
 
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 align-self-center">
       <div class="container">
         <div class="btn-group">
           <button class="btn btn-outline-primary mt-3" @click="openSettings()">

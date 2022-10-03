@@ -14,7 +14,7 @@ function toString() {
         row
           .map((cell) => {
             const address = String(cell.getAddress());
-            return address.length === 1 ? ` ${address}` : address;
+            return address.padStart(3);
           })
           .join(" "),
         row
@@ -242,16 +242,15 @@ function showMines() {
 }
 
 function isFieldEmpty() {
-  return (
-    this.getCells().filter((cell) => cell.getValue() !== null).length === 0
-  );
+  return this.getCells()
+    .filter((cell) => cell.getValue() !== null)
+    .length === 0;
 }
 
 function areMinesOpened() {
-  return (
-    this.getCells().filter((cell) => cell.isMine() && cell.isOpened())
-      .length !== 0
-  );
+  return this.getCells()
+    .filter((cell) => cell.isMine() && cell.isOpened())
+    .length !== 0;
 }
 
 function areAllCellsAreOpened() {
@@ -259,11 +258,9 @@ function areAllCellsAreOpened() {
   const width = level.getWidth();
   const height = level.getHeight();
   const mines = level.getMines();
-  return (
-    this.getCells().filter((cell) => not(cell.isMine()) && cell.isOpened())
-      .length ===
-    width * height - mines
-  );
+  return this.getCells()
+    .filter((cell) => not(cell.isMine()) && cell.isOpened())
+    .length === width * height - mines;
 }
 
 function getStatus() {
@@ -279,9 +276,10 @@ function getStatus() {
   return statuses.started;
 }
 
-function Field(level, cells) {
+function Field(level, cells, timerId) {
   this._level = level;
   this._cells = cells ? cells : makeEmptyCells(level);
+  this._timerId = timerId;
   this.getLevel = getLevel;
   this.areNeighbors = areNeighbors;
   this.getNeighbors = getNeighbors;
@@ -296,3 +294,11 @@ function Field(level, cells) {
 }
 
 export default Field;
+
+// import Level from '../levels/level.js';
+// const lvl = new Level('Senior');
+// let field = new Field(lvl);
+
+// console.log(String(field));
+// field = field.touch(new Cell(28));
+// console.log(String(field));
